@@ -29,6 +29,11 @@ letra [a-zA-Z]
 				return T_MAIN;}
 "return"    { printf("return : %s\n", yytext);
 				return T_RETURN;}
+"true"      { printf("BOOL TRUE : %s\n", yytext); 
+              return T_TRUE;}
+"false"     { printf("BOOL FALSE : %s\n", yytext); 
+              return T_FALSE;}
+
 
 {entero}+   { printf("ENTERO : %d\n", atoi(yytext));
 				return ENTERO;}
