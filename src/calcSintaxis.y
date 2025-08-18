@@ -20,26 +20,37 @@
 %token T_LA
 %token T_LC
 %token T_PUNTOC
+%token T_TRUE
+%token T_FALSE
 
 %type expr
 %type VALOR
 
-%left '+' TMENOS 
-%left '*'
+%left T_SUMA
+%left T_MULT
 
-%union {tree t ; int v ; %char var;}
- 
+/* %union {tree t ; int v ; %char var;} */
+
 %%
 
 
 prog:
-      T_VOID T_MAIN T_PA T_PC bloque    { printf("No hay errores \n"); } 
-    | T_INT T_MAIN T_PA T_PC bloque     { printf("No hay errores \n"); } 
-    | T_BOOL T_MAIN T_PA T_PC bloque    { printf("No hay errores \n"); } 
+      tipo_main T_MAIN T_PA T_PC bloque { printf("No hay errores \n"); }
+    ;
+
+tipo_main:
+      T_VOID
+    | T_INT
+    | T_BOOL
     ;
 
 bloque:
-      T_LA sentencias T_LC
+      T_LA declaraciones sentencias T_LC
+    ;
+
+declaraciones:
+      declaraciones decl_var
+    | decl_var
     ;
 
 sentencias:
@@ -48,13 +59,14 @@ sentencias:
     ;
 
 sentencia:
-      decl_var
-    | asignacion
+      asignacion
     | T_RETURN expr T_PUNTOC
     | T_RETURN T_PUNTOC
     ;
 
-decl_var: T_INT ID T_PUNTOC | T_BOOL ID T_PUNTOC
+decl_var: 
+      T_INT ID T_PUNTOC 
+    | T_BOOL ID T_PUNTOC
     ;
 
 asignacion: ID T_ASIGNACION expr T_PUNTOC
@@ -69,7 +81,11 @@ expr: VALOR
 
     ;
 
-VALOR : ENTERO | ID | T_BOOL            
-       ;
+VALOR : 
+      ENTERO 
+    | ID 
+    | T_TRUE
+    | T_FALSE           
+    ;
  
 %%
