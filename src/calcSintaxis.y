@@ -2,11 +2,12 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "ast.c"
 
 %}
  
-%token ENTERO
-%token ID
+%token <v> ENTERO
+%token <var> ID
 %token T_INT
 %token T_MAIN
 %token T_VOID
@@ -20,16 +21,15 @@
 %token T_LA
 %token T_LC
 %token T_PUNTOC
-%token T_TRUE
-%token T_FALSE
+%token <v> T_TRUE
+%token <v> T_FALSE
 
-%type expr
-%type VALOR
+%type <t> prog bloque declaraciones sentencias sentencia decl_var asignacion expr VALOR
 
 %left T_SUMA
 %left T_MULT
 
-/* %union {tree t ; int v ; %char var;} */
+%union { Nodo* t; int v ; char* var;}
 
 %%
 
