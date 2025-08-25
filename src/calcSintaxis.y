@@ -71,21 +71,21 @@ decl_var:
 
 asignacion: ID T_ASIGNACION expr T_PUNTOC
 
-expr: VALOR               
+expr: VALOR  {$$ = $1;}             
 
-    | expr T_SUMA expr    
+    | expr T_SUMA expr    {$$ = nodo_binario(AST_OP, $2, $1, $3);}
     
-    | expr T_MULT expr
+    | expr T_MULT expr  {$$ = nodo_binario(AST_OP, $2, $1, $3);}
 
-    | T_PA expr T_PC   
+    | T_PA expr T_PC  {$$ = $2;} 
 
     ;
 
 VALOR : 
-      ENTERO 
-    | ID 
-    | T_TRUE
-    | T_FALSE           
+      ENTERO {$$ = nodo_hojo(AST_INT, $1);}
+    | ID {$$ = nodo_hojo(AST_ID, $1);}
+    | T_TRUE {$$ = nodo_hojo(AST_BOOL, $1);}
+    | T_FALSE {$$ = nodo_hojo(AST_BOOL, $1);}       
     ;
  
 %%
