@@ -29,7 +29,7 @@
 %left T_SUMA
 %left T_MULT
 
-%union { Nodo* t; int v ; char* var;}
+%union { Nodo* t; AstValor v }
 
 %%
 

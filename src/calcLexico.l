@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "calcSintaxis.tab.h"
+#include "ast.c"
 
 %}
 
@@ -29,21 +30,21 @@ letra [a-zA-Z]
 				return T_MAIN;}
 "return"    { printf("return : %s\n", yytext);
 				return T_RETURN;}
-"true"      { printf("BOOL TRUE : %s\n", yytext); 
-              return T_TRUE;}
-"false"     { printf("BOOL FALSE : %s\n", yytext); 
-              return T_FALSE;}
+"true"      { yyival.v.b = 1; 
+				return T_TRUE;}
+"false"     { yyival.v.b = 0; 
+				return T_FALSE;}
 
 
-{entero}+   { printf("ENTERO : %d\n", atoi(yytext));
+{entero}+   { yyival.v.i = atol(yytext));
 				return ENTERO;}
 
-{letra}({letra}|{entero})* { printf("ID : %s\n", yytext);
+{letra}({letra}|{entero})* { yyival.v.s =  strdup(yytext);
                             	return ID;}
 
-"+"		{printf("%s\n",yytext);
+"+"		{ yyival.v.op = "+"; 
 			return T_SUMA;}
-"*"		{printf("%s\n",yytext);
+"*"		{ yyival.v.op = "*";
 			return T_MULT;}
 ";"		{printf("%s\n",yytext);
 			return T_PUNTOC;}
