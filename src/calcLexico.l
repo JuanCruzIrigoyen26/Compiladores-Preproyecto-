@@ -30,21 +30,21 @@ letra [a-zA-Z]
 				return T_MAIN;}
 "return"    { printf("return : %s\n", yytext);
 				return T_RETURN;}
-"true"      { yyival.v.b = 1; 
+"true"      { yylval.v.b = 1; 
 				return T_TRUE;}
-"false"     { yyival.v.b = 0; 
+"false"     { yylval.v.b = 0; 
 				return T_FALSE;}
 
 
-{entero}+   { yyival.v.i = atol(yytext));
+{entero}+   { yylval.v.i = atol(yytext));
 				return ENTERO;}
 
-{letra}({letra}|{entero})* { yyival.v.s =  strdup(yytext);
+{letra}({letra}|{entero})* { yylval.v.s =  strdup(yytext);
                             	return ID;}
 
-"+"		{ yyival.v.op = "+"; 
+"+"		{ yylval.v.op = '+'; 
 			return T_SUMA;}
-"*"		{ yyival.v.op = "*";
+"*"		{ yylval.v.op = '*';
 			return T_MULT;}
 ";"		{printf("%s\n",yytext);
 			return T_PUNTOC;}
@@ -56,7 +56,7 @@ letra [a-zA-Z]
 			return T_LA;}
 "}"		{printf("%s\n",yytext);
 			return T_LC;}
-"="		{printf("%s\n",yytext);
+"="		{ yylval.v.op = '=';
 			return T_ASIGNACION;}		
 
 .|\n                          ; /* ignore all the rest */
