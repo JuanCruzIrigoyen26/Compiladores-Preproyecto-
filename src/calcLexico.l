@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include "calcSintaxis.tab.h"
 #include "ast.c"
+#include "calcSintaxis.tab.h"
 
 %}
 
@@ -36,7 +36,7 @@ letra [a-zA-Z]
 				return T_FALSE;}
 
 
-{entero}+   { yylval.v.i = atol(yytext));
+{entero}+   { yylval.v.i = atol(yytext);
 				return ENTERO;}
 
 {letra}({letra}|{entero})* { yylval.v.s =  strdup(yytext);
@@ -67,11 +67,3 @@ void yyerror(){
     printf("%s%d\n","-> ERROR Sintactico en la linea: ",yylineno);
 }
 
-int main(int argc,char *argv[]){
-    ++argv,--argc;
-    if (argc > 0)
-        yyin = fopen(argv[0],"r");
-    else
-        yyin = stdin;
-    yyparse(); // llama al parser de Bison
-}

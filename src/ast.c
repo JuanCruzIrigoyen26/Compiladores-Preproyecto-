@@ -1,28 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-typedef enum {
-    AST_INT,
-    AST_BOOL,
-    AST_ID,
-    AST_OP,
-    AST_NONTERM
-} AstTipo;
-
-typedef union {
-    long   i;
-    int    b;
-    char  *s;
-    int    op;
-} AstValor;
-
-typedef struct Nodo {
-    AstTipo tipo;
-    AstValor v;
-    struct Nodo *hi;
-    struct Nodo *hd;
-} Nodo;
+#include "ast.h"
 
 Nodo* nodo_hoja(AstTipo t, AstValor v) {
     Nodo *n = (Nodo*)malloc(sizeof(Nodo));
@@ -43,3 +22,36 @@ Nodo* nodo_binario(AstTipo t, AstValor v, Nodo* hi, Nodo* hd) {
     n->hd = hd;
     return n;
 }
+
+void imprimir_ast(Nodo* nodo, int nivel) {
+    if (!nodo) return;
+
+    // indentación para representar jerarquía
+    for (int i = 0; i < nivel; i++) printf("  ");
+
+    switch (nodo->tipo) {
+        case AST_INT:
+            printf("INT: %ld\n", nodo->v.i);
+            break;
+        case AST_BOOL:
+            printf("BOOL: %s\n", nodo->v.b ? "true" : "false");
+            break;
+        case AST_ID:
+            printf("ID: %s\n", nodo->v.s ? nodo->v.s : "(null)");
+            break;
+        case AST_OP:
+            printf("OP: %c\n", nodo->v.op);
+            break;
+        case AST_NONTERM:
+            printf("NONTERM\n");
+            break;
+        default:
+            printf("Nodo desconocido\n");
+    }
+
+    // recursión
+    imprimir_ast(nodo->hi, nivel + 1);
+    imprimir_ast(nodo->hd, nivel + 1);
+}
+
+
