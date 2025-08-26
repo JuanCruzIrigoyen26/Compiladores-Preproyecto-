@@ -51,25 +51,37 @@ extern int yydebug;
   {
     ENTERO = 258,
     ID = 259,
-    T_INT = 260,
-    T_MAIN = 261,
-    T_VOID = 262,
-    T_RETURN = 263,
-    T_BOOL = 264,
-    T_SUMA = 265,
-    T_MULT = 266,
-    T_ASIGNACION = 267,
-    T_PA = 268,
-    T_PC = 269,
-    T_LA = 270,
-    T_LC = 271,
-    T_PUNTOC = 272
+    T_SUMA = 260,
+    T_MULT = 261,
+    T_ASIGNACION = 262,
+    T_TRUE = 263,
+    T_FALSE = 264,
+    T_INT = 265,
+    T_MAIN = 266,
+    T_VOID = 267,
+    T_RETURN = 268,
+    T_BOOL = 269,
+    T_PA = 270,
+    T_PC = 271,
+    T_LA = 272,
+    T_LC = 273,
+    T_PUNTOC = 274
   };
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 12 "calcSintaxis.y"
+
+    Nodo* nodo;      /* para los no terminales (árboles) */
+    AstValor valor;  /* para los tokens léxicos (valores básicos, IDs, ops, etc.) */
+
+#line 82 "calcSintaxis.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

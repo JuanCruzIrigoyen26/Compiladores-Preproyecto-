@@ -5,7 +5,10 @@
 
 Nodo* nodo_hoja(AstTipo t, AstValor v) {
     Nodo *n = (Nodo*)malloc(sizeof(Nodo));
-    if (!n) { fprintf(stderr, "Out of memory\n"); exit(1); }
+    if (!n) { 
+        fprintf(stderr, "Out of memory\n"); 
+        exit(1); 
+    }
     n->tipo = t;
     n->hi = n->hd = NULL;
     n->v = v;
@@ -17,7 +20,14 @@ Nodo* nodo_hoja(AstTipo t, AstValor v) {
 }
 
 Nodo* nodo_binario(AstTipo t, AstValor v, Nodo* hi, Nodo* hd) {
-    Nodo* n = nodo_hoja(t, v);
+    Nodo *n = malloc(sizeof(Nodo));
+    if (!n){
+        fprintf(stderr, "Out of memory\n");
+        exit(1);
+    }
+
+    n->tipo = t;
+    n->v = v;
     n->hi = hi;
     n->hd = hd;
     return n;

@@ -1,14 +1,13 @@
 #include <stdio.h>
-#include "calcSintaxis.tab.h"
 #include "ast.h"
+#include "calcSintaxis.tab.h"
 
 extern Nodo* raiz;
 extern FILE *yyin;  
 
 int main(int argc, char *argv[]) {
-    ++argv, --argc;
-    if (argc > 0)
-        yyin = fopen(argv[0],"r");
+    if (argc > 1)
+        yyin = fopen(argv[1],"r");
     else
         yyin = stdin;
 
@@ -16,5 +15,10 @@ int main(int argc, char *argv[]) {
         printf("\nÁrbol de sintaxis abstracta (AST):\n");
         imprimir_ast(raiz, 0);
     }
+
+    if (yyin != stdin){
+        fclose(yyin);
+    }
+
     return 0;
 }
