@@ -149,10 +149,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 12 "calcSintaxis.y"
+#line 13 "calcSintaxis.y"
 
-    Nodo* nodo;      /* para los no terminales (árboles) */
-    AstValor valor;  /* para los tokens léxicos (valores básicos, IDs, ops, etc.) */
+    Nodo* nodo;      
+    AstValor valor;
 
 #line 158 "calcSintaxis.tab.c"
 
@@ -480,7 +480,7 @@ union yyalloc
 /* YYNNTS -- Number of nonterminals.  */
 #define YYNNTS  11
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  24
+#define YYNRULES  26
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  46
 
@@ -531,9 +531,9 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    47,    47,    52,    53,    54,    58,    63,    65,    70,
-      72,    77,    79,    81,    86,    88,    93,    98,   100,   102,
-     104,   109,   111,   113,   115
+       0,    47,    47,    56,    57,    58,    62,    72,    74,    75,
+      79,    81,    82,    86,    88,    90,    95,    97,   102,   107,
+     108,   110,   112,   117,   118,   119,   120
 };
 #endif
 
@@ -587,10 +587,10 @@ static const yytype_int8 yypact[] =
 static const yytype_int8 yydefact[] =
 {
        0,     4,     3,     5,     0,     0,     1,     0,     0,     0,
-       0,     2,     0,     0,     0,     8,     0,     0,     0,     0,
-       0,    10,     7,    11,    14,    15,     0,    21,    22,    23,
-      24,     0,    13,     0,    17,     6,     9,     0,     0,     0,
-       0,    12,    16,    20,    18,    19
+       9,     2,     0,     0,    12,     8,     0,     0,     0,     0,
+       0,    11,     7,    13,    16,    17,     0,    23,    24,    25,
+      26,     0,    15,     0,    19,     6,    10,     0,     0,     0,
+       0,    14,    18,    22,    20,    21
 };
 
   /* YYPGOTO[NTERM-NUM].  */
@@ -642,17 +642,17 @@ static const yytype_int8 yystos[] =
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    20,    21,    22,    22,    22,    23,    24,    24,    25,
-      25,    26,    26,    26,    27,    27,    28,    29,    29,    29,
-      29,    30,    30,    30,    30
+       0,    20,    21,    22,    22,    22,    23,    24,    24,    24,
+      25,    25,    25,    26,    26,    26,    27,    27,    28,    29,
+      29,    29,    29,    30,    30,    30,    30
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     5,     1,     1,     1,     4,     2,     1,     2,
-       1,     1,     3,     2,     3,     3,     4,     1,     3,     3,
-       3,     1,     1,     1,     1
+       0,     2,     5,     1,     1,     1,     4,     2,     1,     0,
+       2,     1,     0,     1,     3,     2,     3,     3,     4,     1,
+       3,     3,     3,     1,     1,     1,     1
 };
 
 
@@ -1349,126 +1349,165 @@ yyreduce:
     {
   case 2:
 #line 48 "calcSintaxis.y"
-        { printf("No hay errores \n"); raiz = (yyvsp[0].nodo); (yyval.nodo) = (yyvsp[0].nodo); }
-#line 1354 "calcSintaxis.tab.c"
+        { 
+          AstValor v = {0};
+          raiz = nodo_binario(AST_FUNCION, v, nodo_hoja(AST_DEC_TIPO, (AstValor){.s="main"}), (yyvsp[0].nodo));
+          (yyval.nodo) = raiz;
+        }
+#line 1358 "calcSintaxis.tab.c"
+    break;
+
+  case 3:
+#line 56 "calcSintaxis.y"
+             { AstValor v = {.s="void"}; (yyval.nodo) = nodo_hoja(AST_DEC_TIPO, v); }
+#line 1364 "calcSintaxis.tab.c"
+    break;
+
+  case 4:
+#line 57 "calcSintaxis.y"
+             { AstValor v = {.s="int"}; (yyval.nodo) = nodo_hoja(AST_DEC_TIPO, v); }
+#line 1370 "calcSintaxis.tab.c"
+    break;
+
+  case 5:
+#line 58 "calcSintaxis.y"
+             { AstValor v = {.s="bool"}; (yyval.nodo) = nodo_hoja(AST_DEC_TIPO, v); }
+#line 1376 "calcSintaxis.tab.c"
     break;
 
   case 6:
-#line 59 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_binario(AST_NONTERM, (AstValor){0}, (yyvsp[-2].nodo), (yyvsp[-1].nodo)); }
-#line 1360 "calcSintaxis.tab.c"
+#line 63 "calcSintaxis.y"
+        {
+          AstValor v = {0};
+          Nodo* decls = nodo_binario(AST_DECLS, v, (yyvsp[-2].nodo), NULL);
+          Nodo* stmts = nodo_binario(AST_STMTS, v, (yyvsp[-1].nodo), NULL);
+          (yyval.nodo) = nodo_binario(AST_SEQ, v, decls, stmts);
+        }
+#line 1387 "calcSintaxis.tab.c"
     break;
 
   case 7:
-#line 64 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_binario(AST_NONTERM, (AstValor){0}, (yyvsp[-1].nodo), (yyvsp[0].nodo)); }
-#line 1366 "calcSintaxis.tab.c"
+#line 73 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_binario(AST_SEQ, (AstValor){0}, (yyvsp[-1].nodo), (yyvsp[0].nodo)); }
+#line 1393 "calcSintaxis.tab.c"
     break;
 
   case 8:
-#line 66 "calcSintaxis.y"
-        { (yyval.nodo) = (yyvsp[0].nodo); }
-#line 1372 "calcSintaxis.tab.c"
+#line 74 "calcSintaxis.y"
+               { (yyval.nodo) = (yyvsp[0].nodo); }
+#line 1399 "calcSintaxis.tab.c"
     break;
 
   case 9:
-#line 71 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_binario(AST_NONTERM, (AstValor){0}, (yyvsp[-1].nodo), (yyvsp[0].nodo)); }
-#line 1378 "calcSintaxis.tab.c"
+#line 75 "calcSintaxis.y"
+                   { (yyval.nodo) = NULL; }
+#line 1405 "calcSintaxis.tab.c"
     break;
 
   case 10:
-#line 73 "calcSintaxis.y"
-        { (yyval.nodo) = (yyvsp[0].nodo); }
-#line 1384 "calcSintaxis.tab.c"
+#line 80 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_binario(AST_SEQ, (AstValor){0}, (yyvsp[-1].nodo), (yyvsp[0].nodo)); }
+#line 1411 "calcSintaxis.tab.c"
     break;
 
   case 11:
-#line 78 "calcSintaxis.y"
-        { (yyval.nodo) = (yyvsp[0].nodo); }
-#line 1390 "calcSintaxis.tab.c"
+#line 81 "calcSintaxis.y"
+                { (yyval.nodo) = (yyvsp[0].nodo); }
+#line 1417 "calcSintaxis.tab.c"
     break;
 
   case 12:
-#line 80 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_binario(AST_OP, (AstValor){.op='R'}, (yyvsp[-1].nodo), NULL); }
-#line 1396 "calcSintaxis.tab.c"
+#line 82 "calcSintaxis.y"
+                   { (yyval.nodo) = NULL; }
+#line 1423 "calcSintaxis.tab.c"
     break;
 
   case 13:
-#line 82 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_binario(AST_OP, (AstValor){.op='R'}, NULL, NULL); }
-#line 1402 "calcSintaxis.tab.c"
+#line 87 "calcSintaxis.y"
+        { (yyval.nodo) = (yyvsp[0].nodo); }
+#line 1429 "calcSintaxis.tab.c"
     break;
 
   case 14:
-#line 87 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_hoja(AST_ID, (yyvsp[-1].valor)); }
-#line 1408 "calcSintaxis.tab.c"
+#line 89 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_binario(AST_RETURN, (AstValor){0}, (yyvsp[-1].nodo), NULL); }
+#line 1435 "calcSintaxis.tab.c"
     break;
 
   case 15:
-#line 89 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_hoja(AST_ID, (yyvsp[-1].valor)); }
-#line 1414 "calcSintaxis.tab.c"
+#line 91 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_binario(AST_RETURN, (AstValor){0}, NULL, NULL); }
+#line 1441 "calcSintaxis.tab.c"
     break;
 
   case 16:
-#line 94 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_binario(AST_OP, (AstValor){.op='='}, nodo_hoja(AST_ID, (yyvsp[-3].valor)), (yyvsp[-1].nodo)); }
-#line 1420 "calcSintaxis.tab.c"
+#line 96 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_hoja(AST_ID, (yyvsp[-1].valor)); }
+#line 1447 "calcSintaxis.tab.c"
     break;
 
   case 17:
-#line 99 "calcSintaxis.y"
-        { (yyval.nodo) = (yyvsp[0].nodo); }
-#line 1426 "calcSintaxis.tab.c"
+#line 98 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_hoja(AST_ID, (yyvsp[-1].valor)); }
+#line 1453 "calcSintaxis.tab.c"
     break;
 
   case 18:
-#line 101 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_binario(AST_OP, (yyvsp[-1].valor), (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
-#line 1432 "calcSintaxis.tab.c"
+#line 103 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_binario(AST_ASIGNACION, (AstValor){0}, nodo_hoja(AST_ID, (yyvsp[-3].valor)), (yyvsp[-1].nodo)); }
+#line 1459 "calcSintaxis.tab.c"
     break;
 
   case 19:
-#line 103 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_binario(AST_OP, (yyvsp[-1].valor), (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
-#line 1438 "calcSintaxis.tab.c"
+#line 107 "calcSintaxis.y"
+          { (yyval.nodo) = (yyvsp[0].nodo); }
+#line 1465 "calcSintaxis.tab.c"
     break;
 
   case 20:
-#line 105 "calcSintaxis.y"
-        { (yyval.nodo) = (yyvsp[-1].nodo); }
-#line 1444 "calcSintaxis.tab.c"
+#line 109 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_binario(AST_OP, (AstValor){.op='+'}, (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1471 "calcSintaxis.tab.c"
     break;
 
   case 21:
-#line 110 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_hoja(AST_INT, (yyvsp[0].valor)); }
-#line 1450 "calcSintaxis.tab.c"
+#line 111 "calcSintaxis.y"
+        { (yyval.nodo) = nodo_binario(AST_OP, (AstValor){.op='*'}, (yyvsp[-2].nodo), (yyvsp[0].nodo)); }
+#line 1477 "calcSintaxis.tab.c"
     break;
 
   case 22:
-#line 112 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_hoja(AST_ID, (yyvsp[0].valor)); }
-#line 1456 "calcSintaxis.tab.c"
+#line 113 "calcSintaxis.y"
+        { (yyval.nodo) = (yyvsp[-1].nodo); }
+#line 1483 "calcSintaxis.tab.c"
     break;
 
   case 23:
-#line 114 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_hoja(AST_BOOL, (yyvsp[0].valor)); }
-#line 1462 "calcSintaxis.tab.c"
+#line 117 "calcSintaxis.y"
+               { (yyval.nodo) = nodo_hoja(AST_INT, (yyvsp[0].valor)); }
+#line 1489 "calcSintaxis.tab.c"
     break;
 
   case 24:
-#line 116 "calcSintaxis.y"
-        { (yyval.nodo) = nodo_hoja(AST_BOOL, (yyvsp[0].valor)); }
-#line 1468 "calcSintaxis.tab.c"
+#line 118 "calcSintaxis.y"
+               { (yyval.nodo) = nodo_hoja(AST_ID, (yyvsp[0].valor)); }
+#line 1495 "calcSintaxis.tab.c"
+    break;
+
+  case 25:
+#line 119 "calcSintaxis.y"
+               { (yyval.nodo) = nodo_hoja(AST_BOOL, (yyvsp[0].valor)); }
+#line 1501 "calcSintaxis.tab.c"
+    break;
+
+  case 26:
+#line 120 "calcSintaxis.y"
+               { (yyval.nodo) = nodo_hoja(AST_BOOL, (yyvsp[0].valor)); }
+#line 1507 "calcSintaxis.tab.c"
     break;
 
 
-#line 1472 "calcSintaxis.tab.c"
+#line 1511 "calcSintaxis.tab.c"
 
       default: break;
     }
@@ -1700,7 +1739,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 119 "calcSintaxis.y"
+#line 123 "calcSintaxis.y"
 
 
 void yyerror(const char *s) {

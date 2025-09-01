@@ -6,10 +6,23 @@ typedef enum {
     AST_BOOL,
     AST_ID,
     AST_OP,
-    AST_NONTERM
+    AST_DEC_TIPO,
+    AST_RETURN,
+    AST_FUNCION,
+    AST_DECLS,
+    AST_STMTS,
+    AST_SEQ,
+    AST_ASIGNACION
 } AstTipo;
 
+typedef enum {
+    CONST,
+    VAR,
+    IDENT
+} tipoDec;
+
 typedef struct {
+    tipoDec tipoDec;
     long   i;
     int    b;
     char  *s;
@@ -18,7 +31,7 @@ typedef struct {
 
 typedef struct Nodo {
     AstTipo tipo;
-    AstValor v;
+    AstValor *v;         //Luego declararlo como puntero para facilitar el uso en la tabla: AstValor *v;
     struct Nodo *hi;
     struct Nodo *hd;
 } Nodo;

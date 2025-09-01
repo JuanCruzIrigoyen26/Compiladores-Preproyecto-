@@ -73,10 +73,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 12 "calcSintaxis.y"
+#line 13 "calcSintaxis.y"
 
-    Nodo* nodo;      /* para los no terminales (árboles) */
-    AstValor valor;  /* para los tokens léxicos (valores básicos, IDs, ops, etc.) */
+    Nodo* nodo;      
+    AstValor valor;
 
 #line 82 "calcSintaxis.tab.h"
 
