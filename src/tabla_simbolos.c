@@ -12,10 +12,10 @@ void inicializarTS() {
 }
 
 // Inserta un símbolo en la tabla
-Simbolo* insertarSimbolo(const char *nombre, const char *tipo, AstTipo flag) {
+Simbolo* insertarSimbolo(AstValor *valor) {
     // Primero, verificar si ya existe
-    if (buscarSimbolo(nombre)) {
-        fprintf(stderr, "Error: identificador '%s' ya declarado\n", nombre);
+    if (buscarSimbolo(valor->s)) {
+        fprintf(stderr, "Error: identificador '%s' ya declarado\n", valor->s);
         return NULL;
     }
 
@@ -25,10 +25,7 @@ Simbolo* insertarSimbolo(const char *nombre, const char *tipo, AstTipo flag) {
         fprintf(stderr, "Error: sin memoria para símbolo\n");
         exit(1);
     }
-    nuevo->nombre = strdup(nombre);
-    nuevo->tipo = strdup(tipo);
-    nuevo->flag = flag;
-    nuevo->valor = 0;
+    nuevo->v = valor;
     nuevo->sig = tabla; // Insertar al inicio de la lista
     tabla = nuevo;
 
@@ -36,20 +33,27 @@ Simbolo* insertarSimbolo(const char *nombre, const char *tipo, AstTipo flag) {
 }
 
 // Busca un símbolo por nombre
-Simbolo* buscarSimbolo(const char *nombre) {
-    Simbolo *s = tabla;
-    while (s) {
-        if (strcmp(s->nombre, nombre) == 0)
-            return s;
-        s = s->sig;
+Simbolo* buscarSimbolo(char *nombre) {
+    Simbolo *simbolo = tabla;
+    while (simbolo) {
+        if (strcmp(simbolo->v->s, nombre) == 0)
+            return simbolo;
+        simbolo = simbolo->sig;
     }
     return NULL; // No encontrado
 }
 
 void imprimir_tabla() {
-    Simbolo *s = tabla;  // tabla es el puntero global a la lista
-    while (s) {
-        printf("%s = %d\n", s->nombre, s->valor);
-        s = s->sig;
+    Simbolo *simbolo = tabla;  // tabla es el puntero global a la lista
+
+    while (simbolo) {
+        if (simbolo->v->tipoDef == INT)
+        {
+            printf("%s = %d\n", simbolo->v->s, simbolo->v->i);
+        }else if (simbolo->v->tipoDef == BOOL)
+        {
+            printf("%s = %d\n", simbolo->v->s, simbolo->v->b);
+        }
+        simbolo = simbolo->sig;
     }
 }

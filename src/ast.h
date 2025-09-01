@@ -17,12 +17,17 @@ typedef enum {
 
 typedef enum {
     CONST,
-    VAR,
-    IDENT
+    VAR
 } tipoDec;
+
+typedef enum {
+    INT,
+    BOOL
+} tipoDef;
 
 typedef struct {
     tipoDec tipoDec;
+    tipoDef tipoDef;
     long   i;
     int    b;
     char  *s;
@@ -31,7 +36,7 @@ typedef struct {
 
 typedef struct Nodo {
     AstTipo tipo;
-    AstValor *v;         //Luego declararlo como puntero para facilitar el uso en la tabla: AstValor *v;
+    AstValor *v;       
     struct Nodo *hi;
     struct Nodo *hd;
 } Nodo;

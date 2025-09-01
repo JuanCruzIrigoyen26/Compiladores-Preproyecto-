@@ -53,7 +53,6 @@ void imprimir_ast(Nodo* nodo, int nivel) {
     for (int i = 0; i < nivel; i++) printf("  ");
 
     switch (nodo->tipo) {
-        //Crear cases para las diferentes operaciones, declaraciones, etc
         case AST_INT:
             printf("INT: %ld\n", nodo->v->i);
             break;
