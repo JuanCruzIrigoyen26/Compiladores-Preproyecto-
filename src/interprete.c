@@ -9,13 +9,13 @@ static int evaluar(Nodo* nodo) {
     if (!nodo) return 0;
 
     switch(nodo->tipo) {
-        case AST_INT: return nodo->v.i;
-        case AST_BOOL: return nodo->v.b;
+        case AST_INT: return nodo->v->i;
+        case AST_BOOL: return nodo->v->b;
 
         case AST_ID: {
-            Simbolo* s = buscarSimbolo(nodo->v.s);
+            Simbolo* s = buscarSimbolo(nodo->v->s);
             if (!s) {
-                fprintf(stderr, "Error: variable '%s' no declarada\n", nodo->v.s);
+                fprintf(stderr, "Error: variable '%s' no declarada\n", nodo->v->s);
                 exit(1);
             }
             return s->valor;
@@ -26,30 +26,30 @@ static int evaluar(Nodo* nodo) {
             if (nodo->hi) izquierda = evaluar(nodo->hi);
             if (nodo->hd) derecha = evaluar(nodo->hd);
 
-            switch(nodo->v.op) {
+            switch(nodo->v->op) {
                 case '+': return izquierda + derecha;
                 case '*': return izquierda * derecha;
-                case '=': {
+                case AST_ASIGNACION: {
                     if (nodo->hi->tipo != AST_ID) {
                         fprintf(stderr, "Error: lado izquierdo de asignación no es variable\n");
                         exit(1);
                     }
-                    Simbolo* s = buscarSimbolo(nodo->hi->v.s);
+                    Simbolo* s = buscarSimbolo(nodo->hi->v->s);
                     if (!s) {
-                        fprintf(stderr, "Error: variable '%s' no declarada\n", nodo->hi->v.s);
+                        fprintf(stderr, "Error: variable '%s' no declarada\n", nodo->hi->v->s);
                         exit(1);
                     }
                     s->valor = evaluar(nodo->hd);
                     return s->valor;
                 }
-                case 'R': return derecha; // return
+                case AST_RETURN: return derecha; // return
                 default:
-                    fprintf(stderr, "Error: operación desconocida '%c'\n", nodo->v.op);
+                    fprintf(stderr, "Error: operación desconocida '%c'\n", nodo->v->op);
                     exit(1);
             }
         }
 
-        case AST_NONTERM:
+        case AST_SEQ:
             if (nodo->hi) evaluar(nodo->hi);
             if (nodo->hd) evaluar(nodo->hd);
             return 0;
@@ -65,8 +65,8 @@ static void procesar_declaraciones(Nodo* nodo) {
     if (!nodo) return;
 
     if (nodo->tipo == AST_ID) {
-        if (!insertarSimbolo(nodo->v.s, "int", AST_ID)) {
-            fprintf(stderr, "Error: variable '%s' redeclarada\n", nodo->v.s);
+        if (!insertarSimbolo(nodo->v->s, "int", AST_ID)) {
+            fprintf(stderr, "Error: variable '%s' redeclarada\n", nodo->v->s);
             exit(1);
         }
     } else if (nodo->tipo == AST_NONTERM) {
