@@ -92,14 +92,20 @@ sentencia:
 
 decl_var:
       T_INT ID T_PUNTOC  
-        { $$ = nodo_hoja(AST_ID, $2); }
+        { AstValor v = { .tipoDec = VAR, .tipoDef = INT, .s = $2.s }; 
+          $$ = nodo_hoja(AST_ID, v); }
     | T_BOOL ID T_PUNTOC 
-        { $$ = nodo_hoja(AST_ID, $2); }
+        { AstValor v = { .tipoDec = VAR, .tipoDef = BOOL, .s = $2.s }; 
+          $$ = nodo_hoja(AST_ID, v); }
     ;
+
 
 asignacion:
       ID T_ASIGNACION expr T_PUNTOC 
-        { $$ = nodo_binario(AST_ASIGNACION, (AstValor){0}, nodo_hoja(AST_ID, $1), $3); }
+        { 
+            AstValor v = {0};
+            $$ = nodo_binario(AST_ASIGNACION, (AstValor){0}, nodo_hoja(AST_ID, $1), $3); 
+        }
     ;
 
 expr: 

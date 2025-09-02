@@ -32,6 +32,7 @@ typedef struct {
     int    b;
     char  *s;
     char    op;
+    int flag;
 } AstValor;
 
 typedef struct Nodo {

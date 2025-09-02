@@ -60,7 +60,12 @@ void imprimir_ast(Nodo* nodo, int nivel) {
             printf("BOOL: %s\n", nodo->v->b ? "true" : "false");
             break;
         case AST_ID:
-            printf("ID: %s\n", nodo->v->s ? nodo->v->s : "(null)");
+            if (nodo->v->tipoDec == VAR) {
+                const char *tipoStr = (nodo->v->tipoDef == INT ? "int" : "bool");
+                printf("ID (%s): %s\n", tipoStr, nodo->v->s ? nodo->v->s : "(null)");
+            } else {
+                printf("ID: %s\n", nodo->v->s ? nodo->v->s : "(null)");
+            }
             break;
         case AST_OP:
             printf("OP: %c\n", nodo->v->op);
