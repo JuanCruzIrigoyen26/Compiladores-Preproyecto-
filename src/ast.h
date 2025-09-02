@@ -45,5 +45,5 @@ typedef struct Nodo {
 Nodo* nodo_hoja(AstTipo t, AstValor v);
 Nodo* nodo_binario(AstTipo t, AstValor v, Nodo* hi, Nodo* hd);
 void imprimir_ast(Nodo* nodo, int nivel);
-
+void generar_assembly(Nodo* raiz, FILE* out);
 #endif

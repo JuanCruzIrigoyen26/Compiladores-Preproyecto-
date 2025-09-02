@@ -22,6 +22,9 @@ int main(int argc, char *argv[]) {
         printf("\nEjecutando programa...\n");
         ejecutar(raiz);  // ejecuta el intérprete
         imprimir_tabla(); // Mostramos los valores de las variables
+
+        printf("\nPseudo-Assembly\n");
+        generar_assembly(raiz, stdout); // se genera el pseudo-assembly
     }
 
     if (yyin != stdin){
