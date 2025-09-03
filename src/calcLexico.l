@@ -23,7 +23,7 @@ letra [a-zA-Z]
 
 "void"      { return T_VOID; }
 
-"main"      { yylval.valor.s = strdup("main"); return ID; }
+"main"      { return T_MAIN; }
 
 "return"    { return T_RETURN; }
 
