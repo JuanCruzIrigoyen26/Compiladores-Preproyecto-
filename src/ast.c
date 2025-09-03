@@ -8,6 +8,8 @@ static void generar_sentencias(Nodo* sentencias, FILE* out);
 static void generar_declaracion(Nodo* declaracion, FILE* out);
 static void generar_expresion(Nodo* expresion, FILE* out);
 
+
+//Funcion que crea un nodo para el ast
 Nodo* nodo_hoja(AstTipo t, AstValor v) {
     Nodo *n = (Nodo*)malloc(sizeof(Nodo));
     if (!n) { 
@@ -31,6 +33,7 @@ Nodo* nodo_hoja(AstTipo t, AstValor v) {
     return n;
 }
 
+//Funcion que crea el ast (estructura de arbol binario)
 Nodo* nodo_binario(AstTipo t, AstValor v, Nodo* hi, Nodo* hd) {
     Nodo *n = malloc(sizeof(Nodo));
     if (!n){
@@ -52,6 +55,7 @@ Nodo* nodo_binario(AstTipo t, AstValor v, Nodo* hi, Nodo* hd) {
     return n;
 }
 
+//Funcion que imprime el ast por terminal
 void imprimir_ast(Nodo* nodo, int nivel) {
     if (!nodo) return;
 
@@ -104,6 +108,7 @@ void imprimir_ast(Nodo* nodo, int nivel) {
     imprimir_ast(nodo->hd, nivel + 1);
 }
 
+//Funcion que genera el pseudo-assembly por terminal
 void generar_assembly(Nodo* raiz, FILE* out) {
     if (!raiz) {
         fprintf(out, ": AST vacío\n");
@@ -116,6 +121,7 @@ void generar_assembly(Nodo* raiz, FILE* out) {
     }
 }
 
+//Genera la impresion de la funcion dada en el test para el pseudo-assembly
 static void generar_funcion(Nodo* funcion, FILE* out) {
     if (!funcion) return;
     if (funcion->tipo != AST_FUNCION) {
@@ -138,6 +144,7 @@ static void generar_funcion(Nodo* funcion, FILE* out) {
     fprintf(out, "ENDFUNC\n");
 }
 
+//Funcion que imprime las expresiones para el pseudo-assembly (PUSH, LOAD, ADD, MUL)
 static void generar_expresion(Nodo* expresion, FILE* out) {
     if (!expresion) return;
     switch (expresion->tipo) {
@@ -163,7 +170,7 @@ static void generar_expresion(Nodo* expresion, FILE* out) {
     }
 }
 
-
+//Funcion que imprime las sentencias para el pseudo-assembly (STORE, RET)
 static void generar_sentencias(Nodo* sentencias, FILE* out) {
     if (!sentencias) return;
     switch (sentencias->tipo) {
@@ -190,6 +197,7 @@ static void generar_sentencias(Nodo* sentencias, FILE* out) {
     }
 }
 
+//Funcion que imprime las declaraciones para el pseudo-assembly (DECL )
 static void generar_declaracion(Nodo* declaracion, FILE* out) {
     if (!declaracion) return;
     switch (declaracion->tipo) {
