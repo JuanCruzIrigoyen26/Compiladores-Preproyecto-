@@ -1,7 +1,7 @@
 void main(){
     int x; 
     int y; 
-    x = 2;
+    x = true;
     y=1; 
     x = x+3*2*y;
 }

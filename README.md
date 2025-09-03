@@ -6,7 +6,7 @@ Para compilar el archivo escriba los siguientes comandos en terminal utilizando 
 ### Comandos disponibles:
 - `make` → Compila el parser.
 - `make run TEST=x` → Ejecuta un test.  
-   Ejemplo: `make run TEST=src/test1.c`
+   Ejemplo: `make run TEST=src/test1.c` (Los tests test4.c y test5.c estan hechos para fallar)
 - `make tests` → Ejecuta todos los tests y muestra la salida en terminal.
 - `make clean` → Limpia los archivos generados.
 - `make help` → Lista los comandos disponibles.

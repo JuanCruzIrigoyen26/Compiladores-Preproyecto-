@@ -1,4 +1,4 @@
-bool funcBool() {
+int funcBool() {
   int x;
   bool b;
   x = 1;
