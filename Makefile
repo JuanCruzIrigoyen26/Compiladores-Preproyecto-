@@ -7,14 +7,14 @@ SRC_DIR = src
 LEX_FILE = $(SRC_DIR)/calcLexico.l
 YACC_FILE = $(SRC_DIR)/calcSintaxis.y
 
-# Archivos fuente principales, agregamos calcSemantico.c
+# Archivos fuentes principales (AST, Main, Interprete, Tabla de Simbolos y Chequeo de Tipos)
 SRCS = $(SRC_DIR)/ast.c \
        $(SRC_DIR)/main.c \
        $(SRC_DIR)/interprete.c \
        $(SRC_DIR)/tabla_simbolos.c \
        $(SRC_DIR)/calcSemantico.c
 
-# Archivos generados automáticamente + fuentes
+# Archivos generados automáticamente
 OBJS = $(SRC_DIR)/calcSintaxis.tab.c $(SRC_DIR)/lex.yy.c $(SRCS)
 
 TARGET = $(SRC_DIR)/parser
@@ -47,7 +47,7 @@ tests: $(TARGET)
 	    echo ""; \
 	done
 
-# Ayuda con los comandos disponibles
+# Muestra los comandos disponibles
 help:
 	@echo "Comandos disponibles:"
 	@echo "  make            -> compila el parser"
