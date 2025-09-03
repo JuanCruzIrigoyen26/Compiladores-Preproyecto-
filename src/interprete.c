@@ -24,7 +24,6 @@ static int evaluar(Nodo* nodo) {
 
         case AST_ASIGNACION: {
             Nodo* nodoId = nodo->hi;
-            Nodo* nodoValor = nodo->hd;
             Simbolo* s = buscarSimbolo(nodoId->v->s);
             if (!s) {
                 fprintf(stderr, "Error: variable '%s' no declarada\n", nodoId->v->s);

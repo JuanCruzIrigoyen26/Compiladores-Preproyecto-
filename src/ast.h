@@ -25,7 +25,8 @@ typedef enum {
 // Tipo de dato: entero o booleano
 typedef enum {
     INT,
-    BOOL
+    BOOL,
+    VOID
 } tipoDef;
 
 // Valor asociado a cada nodo del AST

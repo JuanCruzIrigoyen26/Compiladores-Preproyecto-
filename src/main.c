@@ -3,6 +3,7 @@
 #include "calcSintaxis.tab.h"
 #include "interprete.h"     
 #include "tabla_simbolos.h" 
+#include "calcSemantico.h"
 
 extern Nodo* raiz;
 extern FILE *yyin;  
@@ -20,7 +21,10 @@ int main(int argc, char *argv[]) {
         imprimir_ast(raiz, 0);
 
         printf("\nEjecutando programa...\n");
-        ejecutar(raiz);  // ejecuta el intérprete
+        if (verificar_tipos(raiz)) {
+            ejecutar(raiz);  // ejecuta el intérprete
+        }
+        
         imprimir_tabla(); // Mostramos los valores de las variables
 
         printf("\nPseudo-Assembly\n");

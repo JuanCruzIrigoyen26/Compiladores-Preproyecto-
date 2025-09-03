@@ -44,19 +44,21 @@ void yyerror(const char *s);
 %%
 
 prog:
-      tipo_main T_MAIN T_PA T_PC bloque
+      tipo_main ID T_PA T_PC bloque
         { 
           AstValor v = {0};
-          raiz = nodo_binario(AST_FUNCION, v, nodo_hoja(AST_ID, (AstValor){.s="main"}), $5);
+          v.tipoDef = $1->v->tipoDef;   
+          raiz = nodo_binario(AST_FUNCION, v, nodo_hoja(AST_ID, $2), $5);
           $$ = raiz;
         }
     ;
 
 tipo_main:
-      T_VOID { AstValor v = {.s="void"}; $$ = nodo_hoja(AST_DEC_TIPO, v); }
-    | T_INT  { AstValor v = {.s="int"}; $$ = nodo_hoja(AST_DEC_TIPO, v); }
-    | T_BOOL { AstValor v = {.s="bool"}; $$ = nodo_hoja(AST_DEC_TIPO, v); }
+      T_VOID { AstValor v = { .tipoDef = VOID }; $$ = nodo_hoja(AST_DEC_TIPO, v); }
+    | T_INT  { AstValor v = { .tipoDef = INT  }; $$ = nodo_hoja(AST_DEC_TIPO, v); }
+    | T_BOOL { AstValor v = { .tipoDef = BOOL }; $$ = nodo_hoja(AST_DEC_TIPO, v); }
     ;
+
 
 bloque:
       T_LA declaraciones sentencias T_LC 
@@ -102,10 +104,7 @@ decl_var:
 
 asignacion:
       ID T_ASIGNACION expr T_PUNTOC 
-        { 
-            AstValor v = {0};
-            $$ = nodo_binario(AST_ASIGNACION, (AstValor){0}, nodo_hoja(AST_ID, $1), $3); 
-        }
+        { $$ = nodo_binario(AST_ASIGNACION, (AstValor){0}, nodo_hoja(AST_ID, $1), $3); }
     ;
 
 expr: 
@@ -119,10 +118,10 @@ expr:
     ;
 
 VALOR:
-      ENTERO   { $$ = nodo_hoja(AST_INT, $1); }
-    | ID       { $$ = nodo_hoja(AST_ID, $1); }
-    | T_TRUE   { $$ = nodo_hoja(AST_BOOL, $1); }
-    | T_FALSE  { $$ = nodo_hoja(AST_BOOL, $1); }
+      ENTERO { $1.tipoDef = INT; $$ = nodo_hoja(AST_INT, $1); }
+    | ID     { $$ = nodo_hoja(AST_ID, $1); }
+    | T_TRUE { $1.tipoDef = BOOL; $$ = nodo_hoja(AST_BOOL, $1); }
+    | T_FALSE{ $1.tipoDef = BOOL; $$ = nodo_hoja(AST_BOOL, $1); }
     ;
 
 %%
