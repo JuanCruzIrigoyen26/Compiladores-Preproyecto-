@@ -25,6 +25,10 @@ Simbolo* insertarSimbolo(AstValor *valor) {
         fprintf(stderr, "Error: sin memoria para símbolo\n");
         exit(1);
     }
+
+    // Marcar como "no inicializada" al principio
+    valor->flag = 0;
+
     nuevo->v = valor;
     nuevo->sig = tabla; // Insertar al inicio de la lista
     tabla = nuevo;
@@ -49,7 +53,7 @@ void imprimir_tabla() {
     while (simbolo) {
         if (simbolo->v->tipoDef == INT)
         {
-            printf("%s = %d\n", simbolo->v->s, simbolo->v->i);
+            printf("%s = %ld\n", simbolo->v->s, simbolo->v->i);
         }else if (simbolo->v->tipoDef == BOOL)
         {
             printf("%s = %d\n", simbolo->v->s, simbolo->v->b);

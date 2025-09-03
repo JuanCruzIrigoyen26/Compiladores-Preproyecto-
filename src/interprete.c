@@ -10,6 +10,7 @@ static int evaluar(Nodo* nodo) {
 
     switch(nodo->tipo) {
         case AST_INT: return nodo->v->i;
+
         case AST_BOOL: return nodo->v->b;
 
         case AST_ID: {
@@ -18,58 +19,71 @@ static int evaluar(Nodo* nodo) {
                 fprintf(stderr, "Error: variable '%s' no declarada\n", nodo->v->s);
                 exit(1);
             }
-            return s->valor;
+            return (s->v->tipoDef == INT) ? s->v->i : s->v->b;
+        }
+
+        case AST_ASIGNACION: {
+            Nodo* nodoId = nodo->hi;
+            Nodo* nodoValor = nodo->hd;
+            Simbolo* s = buscarSimbolo(nodoId->v->s);
+            if (!s) {
+                fprintf(stderr, "Error: variable '%s' no declarada\n", nodoId->v->s);
+                exit(1);
+            }
+            int valor = evaluar(nodo->hd);
+            if (s->v->tipoDef == INT)
+                s->v->i = valor;
+            else
+                s->v->b = valor;
+            s->v->flag = 1; // opcional: marca como inicializada
+            return valor;
         }
 
         case AST_OP: {
-            int izquierda = 0, derecha = 0;
-            if (nodo->hi) izquierda = evaluar(nodo->hi);
-            if (nodo->hd) derecha = evaluar(nodo->hd);
-
-            switch(nodo->v->op) {
-                case '+': return izquierda + derecha;
-                case '*': return izquierda * derecha;
-                case AST_ASIGNACION: {
-                    if (nodo->hi->tipo != AST_ID) {
-                        fprintf(stderr, "Error: lado izquierdo de asignación no es variable\n");
-                        exit(1);
-                    }
-                    Simbolo* s = buscarSimbolo(nodo->hi->v->s);
-                    if (!s) {
-                        fprintf(stderr, "Error: variable '%s' no declarada\n", nodo->hi->v->s);
-                        exit(1);
-                    }
-                    s->valor = evaluar(nodo->hd);
-                    return s->valor;
-                }
-                case AST_RETURN: return derecha; // return
-                default:
-                    fprintf(stderr, "Error: operación desconocida '%c'\n", nodo->v->op);
-                    exit(1);
-            }
+            int izquierda = evaluar(nodo->hi);
+            int derecha = evaluar(nodo->hd);
+            if (nodo->v->op == '+') return izquierda + derecha;
+            if (nodo->v->op == '*') return izquierda * derecha;
+            return 0;
         }
 
-        case AST_SEQ:
+        case AST_RETURN: {
+            int valor = nodo->hi ? evaluar(nodo->hi) : 0;
+            printf("RETURN: %d\n", valor);
+            return valor;
+        }
+
+       case AST_SEQ:
+        case AST_STMTS:
+        case AST_DECLS:
             if (nodo->hi) evaluar(nodo->hi);
             if (nodo->hd) evaluar(nodo->hd);
             return 0;
 
+        case AST_FUNCION:
+            return evaluar(nodo->hd); // evaluamos el bloque de la función
+
+        case AST_DEC_TIPO:
+            return 0; // no hace nada en la ejecución
+
         default:
-            fprintf(stderr, "Error: nodo desconocido\n");
+            fprintf(stderr, "Error: nodo desconocido en evaluar (tipo=%d)\n", nodo->tipo);
             exit(1);
-    }
+    }    
+       
 }
+
 
 // Procesa declaraciones de variables
 static void procesar_declaraciones(Nodo* nodo) {
     if (!nodo) return;
 
     if (nodo->tipo == AST_ID) {
-        if (!insertarSimbolo(nodo->v->s, "int", AST_ID)) {
-            fprintf(stderr, "Error: variable '%s' redeclarada\n", nodo->v->s);
-            exit(1);
+        // Inserta solo si no existe
+        if (!buscarSimbolo(nodo->v->s)) {
+            insertarSimbolo(nodo->v);
         }
-    } else if (nodo->tipo == AST_NONTERM) {
+    } else {
         if (nodo->hi) procesar_declaraciones(nodo->hi);
         if (nodo->hd) procesar_declaraciones(nodo->hd);
     }
@@ -78,7 +92,7 @@ static void procesar_declaraciones(Nodo* nodo) {
 // Función pública para ejecutar el AST
 void ejecutar(Nodo* raiz) {
     if (!raiz) return;
-
-    procesar_declaraciones(raiz);
-    evaluar(raiz);
+    inicializarTS();           // iniciar tabla vacía
+    procesar_declaraciones(raiz); // agregar variables declaradas
+    evaluar(raiz);             // ejecutar/interpretar programa
 }
