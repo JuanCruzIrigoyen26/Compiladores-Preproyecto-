@@ -44,10 +44,10 @@ void yyerror(const char *s);
 %%
 
 prog:
-      tipo_main ID T_PA T_PC bloque
+      tipo_main T_MAIN T_PA T_PC bloque
         { 
           AstValor v = {0};
-          raiz = nodo_binario(AST_FUNCION, v, nodo_hoja(AST_ID, $2), $5);
+          raiz = nodo_binario(AST_FUNCION, v, nodo_hoja(AST_ID, (AstValor){.s="main"}), $5);
           $$ = raiz;
         }
     ;
